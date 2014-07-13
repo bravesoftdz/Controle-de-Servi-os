@@ -1,0 +1,48 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{E5121063-E1F4-4187-BEBE-ED333B48686A}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="ControleServicos.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="Script\Script.dproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="ControleServicos">
+			<MSBuild Projects="ControleServicos.dproj"/>
+		</Target>
+		<Target Name="ControleServicos:Clean">
+			<MSBuild Targets="Clean" Projects="ControleServicos.dproj"/>
+		</Target>
+		<Target Name="ControleServicos:Make">
+			<MSBuild Targets="Make" Projects="ControleServicos.dproj"/>
+		</Target>
+		<Target Name="Script">
+			<MSBuild Projects="Script\Script.dproj"/>
+		</Target>
+		<Target Name="Script:Clean">
+			<MSBuild Targets="Clean" Projects="Script\Script.dproj"/>
+		</Target>
+		<Target Name="Script:Make">
+			<MSBuild Targets="Make" Projects="Script\Script.dproj"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="ControleServicos;Script"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="ControleServicos:Clean;Script:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="ControleServicos:Make;Script:Make"/>
+		</Target>
+		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+	</Project>
