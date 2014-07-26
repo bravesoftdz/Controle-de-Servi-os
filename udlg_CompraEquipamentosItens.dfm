@@ -4,8 +4,8 @@ inherited frmDlg_CompraEquipamentoItens: TfrmDlg_CompraEquipamentoItens
   ClientHeight = 102
   ClientWidth = 560
   OnActivate = FormActivate
-  ExplicitWidth = 568
-  ExplicitHeight = 136
+  ExplicitWidth = 576
+  ExplicitHeight = 141
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel1: TPanel
@@ -14,12 +14,12 @@ inherited frmDlg_CompraEquipamentoItens: TfrmDlg_CompraEquipamentoItens
     ExplicitTop = 61
     ExplicitWidth = 560
     inherited btnOk: TBitBtn
-      Left = 282
-      ExplicitLeft = 282
+      Left = 274
+      ExplicitLeft = 274
     end
     inherited btnCancelar: TBitBtn
-      Left = 373
-      ExplicitLeft = 373
+      Left = 365
+      ExplicitLeft = 365
     end
   end
   inherited Panel2: TPanel
@@ -172,6 +172,7 @@ inherited frmDlg_CompraEquipamentoItens: TfrmDlg_CompraEquipamentoItens
         BtnNovo.NumGlyphs = 2
         BtnNovo.ParentShowHint = False
         BtnNovo.ShowHint = True
+        BtnNovo.OnClick = edtEquipamentoBtnNovoClick
         BtnEditar.Left = 132
         BtnEditar.Top = 19
         BtnEditar.Width = 25

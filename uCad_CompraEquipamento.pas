@@ -60,6 +60,7 @@ type
     procedure CdsItensAfterOpen(DataSet: TDataSet);
     procedure actGravarExecute(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure edtFornecedorBtnNovoClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -71,7 +72,8 @@ var
 
 implementation
 
-uses Comandos, MinhasClasses, udlg_CompraEquipamentosItens;
+uses Comandos, MinhasClasses, udlg_CompraEquipamentosItens, uCad_Fornecedor,
+  uLibCS;
 
 {$R *.dfm}
 
@@ -216,6 +218,18 @@ begin
 
 end;
 
+procedure TfrmCad_CompraEquipamento.edtFornecedorBtnNovoClick(Sender: TObject);
+begin
+  inherited;
+  frmCad_Fornecedor := TfrmCad_Fornecedor.Create(nil);
+  Try
+    frmCad_Fornecedor.NovoReg := True;
+    frmCad_Fornecedor.ShowModal;
+  Finally
+    FreeAndNil(frmCad_Fornecedor);
+  End;
+end;
+
 procedure TfrmCad_CompraEquipamento.FormActivate(Sender: TObject);
 begin
   inherited;
@@ -233,6 +247,7 @@ begin
   inherited;
   ConfiguraEditPesquisa(edtFornecedor,CdsCadastro,tpCSFornecedor,True);
   edtFornecedor.Localiza;
+  edtFornecedor.UsaBtnNovo :=GetPermissao(IdCadastroFornecedorNovo) and GetPermissao(IdCadastroFornecedor);
   if TipoPesquisa = tpCSEntradaMaterial then
   begin
     TvItens.ClearItems;

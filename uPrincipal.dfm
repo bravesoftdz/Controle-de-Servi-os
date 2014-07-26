@@ -92,11 +92,11 @@ inherited frmPrincipal: TfrmPrincipal
     HotZoneClassName = 'TcxMediaPlayer9Style'
     HotZone.SizePercent = 34
     AlignSplitter = salRight
-    Control = Panel1
+    Control = pnlDados
     ShowHint = True
     ParentShowHint = False
   end
-  object Panel1: TPanel [3]
+  object pnlDados: TPanel [3]
     Left = 728
     Top = 126
     Width = 360

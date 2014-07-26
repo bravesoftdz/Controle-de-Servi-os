@@ -20,8 +20,9 @@ type
     procedure edtEquipamentoBtnNovoClick(Sender: TObject);
     procedure edtValorExit(Sender: TObject);
     procedure FormActivate(Sender: TObject);
-    procedure edtEquipamentoRegAchado(ADataSet: TDataSet);
     procedure btnOkClick(Sender: TObject);
+    procedure edtEquipamentoRegAchado(
+      const ValoresCamposEstra: array of Variant);
   private
     FTipoForm: TTipoForm;
     { Private declarations }
@@ -35,7 +36,7 @@ var
 
 implementation
 
-uses uCad_CompraEquipamento, MinhasClasses, Comandos, uCad_Equipamento;
+uses uCad_CompraEquipamento, MinhasClasses, Comandos, uCad_Equipamento, uLibCS;
 
 {$R *.dfm}
 
@@ -55,17 +56,20 @@ procedure TfrmDlg_CompraEquipamentoItens.edtEquipamentoBtnNovoClick(
   Sender: TObject);
 begin
   inherited;
-  frmCad_Equipamento := TfrmCad_Equipamento.Create(nil);
-  frmCad_Equipamento.NovoReg := True;
-  if frmCad_Equipamento.ShowModal = mrOk Then
+  if TipoForm = tfEquipamento then
   begin
-    edtEquipamento.ValorChave := frmCad_Equipamento.ValorChave;
-    edtEquipamento.Localiza;
+    frmCad_Equipamento := TfrmCad_Equipamento.Create(nil);
+    frmCad_Equipamento.NovoReg := True;
+    if frmCad_Equipamento.ShowModal = mrOk Then
+    begin
+      edtEquipamento.ValorChave := frmCad_Equipamento.ValorChave;
+      edtEquipamento.Localiza;
+    end;
   end;
 end;
 
 procedure TfrmDlg_CompraEquipamentoItens.edtEquipamentoRegAchado(
-  ADataSet: TDataSet);
+  const ValoresCamposEstra: array of Variant);
 begin
   inherited;
   if TipoForm = tfMaterial then
@@ -82,6 +86,7 @@ begin
       Free;
     end;
   end;
+
 end;
 
 procedure TfrmDlg_CompraEquipamentoItens.FormActivate(Sender: TObject);
@@ -102,11 +107,14 @@ begin
     edtQuantidade.Titulo.Caption := 'Quantidade';
     edtQuantidade.DataField := 'QUANTIDADE';
     Self.Caption := 'Entrada de material';
+     edtEquipamento.UsaBtnNovo := GetPermissao(IdCadastroMaterial);
   end else
   begin
     edtTotal.DataField := '';
     edtTotal.Visible := False;
     ConfiguraEditPesquisa(edtEquipamento,pDataSet {frmCad_CompraEquipamento.CdsItens}, tpCSEquipamento,True);
+    edtEquipamento.UsaBtnNovo := GetPermissao(IdCadastroEquipamento) and GetPermissao(IdCadastroEquipamentoNovo);
+
   end;
   DataItem.DataSet := pDataSet;
 end;

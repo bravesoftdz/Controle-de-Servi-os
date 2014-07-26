@@ -52,6 +52,7 @@ interface
 
 
 Const
+  VersaoBD : Integer= 2;
 
   IdCadastroCliente: Integer = 1;
   IdCadastroClienteNovo: Integer = 2;
@@ -125,7 +126,15 @@ Const
   IdListagemServicoAddEquipamento = 57;
   IdListagemServicoEditarEquipamento = 58;
   IdListagemServicoExcluirEquipamento = 59;
-
+  IdCadastroEquipamento = 60;
+  IdCadastroEquipamentoNovo = 61;
+  IdCadastroEquipamentoEditar = 62;
+  IdCadastroEquipamentoExcluir = 63;
+  IdCadastroMarca = 64;
+  IdCadastroGrupoEquipamento = 65;
+  IdTipoMaterial = 66;
+  IdUnidade = 67;
+  IdViewEstoque = 68;
   
 var
   ClassePadrao: TClassePadrao;
@@ -420,6 +429,8 @@ End;
 
 Procedure RegistraAcessos;
 Begin
+  IF StrToIntDef(GetValorCds('SELECT VALOR FROM CONFIGURACOES WHERE NOMECONFIGURACAO = ''VersaoBD'' and NOMESECAO = ''Geral'''),-1) >= VersaoBD Then
+    Exit;
   Try
     StartTrans;
     CriaAcessos('Cadastro de clientes',               '1',IdCadastroCliente);
@@ -494,7 +505,18 @@ Begin
     CriaAcessos('Cadastro de material','22',IdCadastroMaterial   );
     CriaAcessos('Cadastro de local de estoque','23',IdCadastroLocalEstoque   );
 
+    CriaAcessos('Cadastro de Equipamento','24',IdCadastroEquipamento   );
+    CriaAcessos('Novo','24.1',IdCadastroEquipamentoNovo,IdCadastroEquipamento   );
+    CriaAcessos('Editar','24.2',IdCadastroEquipamentoEditar,IdCadastroEquipamento   );
+    CriaAcessos('Excluir','24.3',IdCadastroEquipamentoExcluir,IdCadastroEquipamento   );
 
+    CriaAcessos('Cadastro de Marca','25',IdCadastroMarca   );
+    CriaAcessos('Cadastro de Grupo de equipamento','26',IdCadastroGrupoEquipamento   );
+    CriaAcessos('Cadastro de Tipo de material','27',IdTipoMaterial   );
+    CriaAcessos('Cadastro de unidade','28',IdUnidade   );
+    CriaAcessos('Visão de estoque mínimo','29',IdViewEstoque   );
+
+    Exec_SQL('update or insert into configuracoes(NOMECONFIGURACAO,VALOR,NOMESECAO) values(''VersaoBD'','+IntToStr(VersaoBD)+',''Geral'') MATCHING(NOMECONFIGURACAO, NOMESECAO)');
     Commit;
   Except
     on e:Exception do
@@ -535,6 +557,7 @@ Begin
 Procedure AtualizaAcessos;
 Begin
   SetCds(CdsAcessosUsuarios, tpCSUsuarioAcesso, 'IDUSUARIO = '+IntToStr(USuarioLogado.Id) );
+
 End;
 
 

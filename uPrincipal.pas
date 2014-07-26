@@ -135,7 +135,7 @@ type
     dxBarManager1Bar6: TdxBar;
     dxBarButton52: TdxBarButton;
     dxBarButton53: TdxBarButton;
-    Panel1: TPanel;
+    pnlDados: TPanel;
     GrpAgenda: TGroupBox;
     cxGrid1: TcxGrid;
     TvAgenda: TcxGridDBTableView;
@@ -197,6 +197,7 @@ type
     procedure actRelDivergenciaManutencaoExecute(Sender: TObject);
   private
     { Private declarations }
+    PodeVerAgenda: Boolean;
   public
     { Public declarations }
     Procedure VerificaAgenda;
@@ -677,6 +678,12 @@ begin
   actCadMaterial.Tag  :=IdCadastroMaterial;
   actCadLocalEstoque.Tag := IdCadastroLocalEstoque;
 
+  actCadEquipamento.Tag := IdCadastroEquipamento;
+  actCadMarca.Tag :=IdCadastroMarca;
+  actCadGrupoEquipamento.Tag := IdCadastroGrupoEquipamento;
+  actCadTipoMaterial.Tag := IdTipoMaterial;
+  actUnidade.Tag := IdUnidade;
+
   for I := 0 to ComponentCount - 1 do
   begin
     if Components[i] is TAction then
@@ -686,6 +693,7 @@ begin
     End;
   end;
 
+  grpEstoque.Visible := GetPermissao(IdViewEstoque);
 
 end;
 
@@ -694,6 +702,7 @@ begin
   inherited;
   AtualizaAcessos;
   AtualizaPermissoes;
+  PodeVerAgenda := GetPermissao(IdAgenda);
   VerificaAgenda;
 end;
 
@@ -715,7 +724,7 @@ end;
 procedure TfrmPrincipal.FormShow(Sender: TObject);
 begin
   inherited;
-  VerificaAgenda;
+ // VerificaAgenda;
 end;
 
 
@@ -745,10 +754,16 @@ var
   Filtro: String;
 begin
   GrpAgenda.Visible := False;
-  if not GetPermissao(IdAgenda) then
+  if not PodeVerAgenda then
     Exit;
   Filtro := '  DATACOMPROMISSO <= CURRENT_DATE+2 AND  COALESCE(A.FLAGBAIXADO,''N'') = ''N'' ';
-  SetCds(CdsAgenda,tpcsAgenda,Filtro);
+  Try
+    CdsAgenda.DisableControls;
+    SetCds(CdsAgenda,tpcsAgenda,Filtro);
+    CdsAgenda.EnableControls;
+  Finally
+
+  End;
   GrpAgenda.Visible := CdsAgenda.RecordCount > 0;
 
   VerificaEstoqueMinimo;
@@ -756,7 +771,26 @@ end;
 
 procedure TfrmPrincipal.VerificaEstoqueMinimo;
 begin
-  SetCds(CdsProdutos,tpCSMaterial,' COALESCE(M.ESTOQUETOTAL,0) < COALESCE(M.ESTOQUEMINIMO,0) ');
+  if grpEstoque.Visible then
+  begin
+    Try
+      CdsProdutos.DisableControls;
+      SetCds(CdsProdutos,tpCSMaterial,' COALESCE(M.ESTOQUETOTAL,0) < COALESCE(M.ESTOQUEMINIMO,0) ');
+    Finally
+      CdsProdutos.EnableControls;
+    End;
+    if not GrpAgenda.Visible then
+      grpEstoque.Align := alClient
+    else
+    begin
+      grpEstoque.Align := alBottom;
+      grpEstoque.Height := 170;
+      GrpAgenda.Align := alClient;
+    end;
+    grpEstoque.Visible := not CdsProdutos.IsEmpty;
+  end;
+  pnlDados.Visible := grpEstoque.Visible or  GrpAgenda.Visible ;
+
 end;
 
 end.

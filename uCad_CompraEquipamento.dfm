@@ -239,6 +239,7 @@ inherited frmCad_CompraEquipamento: TfrmCad_CompraEquipamento
               BtnNovo.NumGlyphs = 2
               BtnNovo.ParentShowHint = False
               BtnNovo.ShowHint = True
+              BtnNovo.OnClick = edtFornecedorBtnNovoClick
               BtnEditar.Left = 222
               BtnEditar.Top = 24
               BtnEditar.Width = 25
